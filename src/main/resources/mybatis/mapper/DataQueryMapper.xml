@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.management.crudsystem.mapper.DataQueryMapper">
+
+    <!--查询所有的字段及其web名字-->
+    <select id="queryAllFieldName" resultType="java.util.HashMap">
+        select fieldname,webname from fieldname
+        union all select fieldname,fieldwebname from newfieldwebname
+    </select>
+
+    <!--查询所有员工的原本字段的信息-->
+    <select id="queryAllEmployee" resultType="java.util.HashMap">
+        select * from employee order by userid desc limit  #{pageStart}, #{recordCount}
+    </select>
+
+    <!--查询所有员工的原本字段的信息-->
+    <select id="queryAllEmployeeNotPage" resultType="java.util.HashMap">
+        select * from employee order by userid desc
+    </select>
+
+    <!-- 查询某个ID的员工的其他字段及其信息 -->
+    <select id="queryOtherFieldsByEmployeeID" resultType="java.util.HashMap" parameterType="int">
+        select newfieldname, fieldvalue from newfieldvalue where userid = #{userid}
+    </select>
+
+    <!--查询某个员工的原本字段的信息-->
+    <select id="queryEmployeeById" parameterType="int" resultType="java.util.HashMap">
+        select * from employee where userid=#{userid}
+    </select>
+
+    <!-- 按名字查询员工 -->
+    <select id="dataQueryByName" resultType="java.util.HashMap">
+        select * from employee where name like concat('%',#{name},'%') order by userid desc limit #{pageStart}, #{recordCount}
+    </select>
+
+    <!-- 按名字查询员工 -->
+    <select id="dataQueryByNameNotPage" resultType="java.util.HashMap">
+        select * from employee where name like concat('%',#{name},'%') order by userid desc
+    </select>
+
+    <!-- 按身份证号查询员工 -->
+    <select id="dataQueryByNumber" resultType="java.util.HashMap">
+        select * from employee where idnumber like concat('%',#{idnumber},'%') order by userid desc limit #{pageStart}, #{recordCount}
+    </select>
+
+    <!-- 按身份证号查询员工 -->
+    <select id="dataQueryByNumberNotPage" resultType="java.util.HashMap">
+        select * from employee where idnumber like concat('%',#{idnumber},'%') order by userid desc
+    </select>
+
+    <!-- 按员工序号查询员工 -->
+    <select id="dataQueryByUserIDNotPage" resultType="java.util.HashMap">
+        select * from employee where userid = #{userid}  order by userid desc
+    </select>
+
+    <!-- 查询原本的字段有哪些 -->
+    <select id="QueryOriginalField" resultType="java.util.HashMap">
+        select fieldname from fieldname
+    </select>
+
+    <select id="queryRecordTotalCount" resultType="int">
+        select count(*) from employee
+    </select>
+
+
+
+</mapper>

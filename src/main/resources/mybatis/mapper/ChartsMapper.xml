@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.management.crudsystem.mapper.ChartsMapper">
+    <select id="queryyouthposition" resultType="java.util.HashMap">
+        select youthposition,count(*) as count from employee group by youthposition
+    </select>
+
+    <select id="querysex" resultType="java.util.HashMap">
+        select sex,count(*) as count from employee group by sex
+    </select>
+
+    <select id="queryage" resultType="java.util.HashMap">
+        select birthday from employee
+    </select>
+
+    <select id="querypoliticsstatus" resultType="java.util.HashMap">
+        select politicsstatus,count(*) as count from employee group by politicsstatus
+    </select>
+
+    <select id="querysector" resultMap="querysectorReusltMap">
+        select sector,count(*) as count from employee group by sector
+    </select>
+
+    <resultMap id="querysectorReusltMap" type="java.util.HashMap">
+        <result column="SECTOR" property="sector" jdbcType="VARCHAR" />
+        <result column="COUNT" property="count" jdbcType="INTEGER" />
+    </resultMap>
+
+    <select id="queryprofession" resultType="java.util.HashMap">
+        select profession, count(*) as count from employee group by profession
+    </select>
+
+    <select id="querynation" resultType="java.util.HashMap">
+        select nation, count(*) as count from employee group by nation
+    </select>
+</mapper>

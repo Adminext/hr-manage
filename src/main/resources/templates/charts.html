@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>统计图表</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100i,300,300i,400,700,900">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+    <link rel="stylesheet" th:href="@{/fonts/fontawesome-all.min.css}">
+    <link rel="stylesheet" th:href="@{/fonts/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/fonts/fontawesome5-overrides.min.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.min.css}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" crossorigin="anonymous">
+    <!-- CSS goes in the document HEAD or added to your external stylesheet -->
+    <style type="text/css">
+        table.hovertable {
+            font-family: verdana,arial,sans-serif;
+            font-size:17px;
+            color:#333333;
+            border-width: 1px;
+            border-color: #999999;
+            border-collapse: collapse;
+        }
+        table.hovertable th {
+            background-color:#c3dde0;
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #a9c6c9;
+        }
+        table.hovertable tr {
+            background-color:#d4e3e5;
+        }
+        table.hovertable td {
+            border-width: 1px;
+            padding: 4px;
+            border-style: solid;
+            border-color: #a9c6c9;
+        }
+
+
+    </style>
+    <link rel="stylesheet" th:href="@{/css/navstyle.css}">
+</head>
+
+<body id="page-top">
+    <header>
+    <div style="margin-left: 50px;"><a href="/index"><i class="logo fas fa-home">&nbsp;人事管理系统</i></a></div>
+        <nav class="site-nav">
+            <ul>
+                <li><a href="/dataquery">数据查询</a></li>
+                <li><a href="/datainput">数据录入|修改</a></li>
+                <li class="active"><a href="/charts">统计图表</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div id="wrapper">
+
+        <div class="container-fluid" id="content-wrapper">
+            <div style="margin-left:3%;margin-right:3%;margin-top:3%;" class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <div id="jobbar" style="width:100%;height:350px;margin: 0 auto;"></div>
+                </div>
+
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                    <div id="jobpie" style="width:100%;height:350px;margin: 0 auto;"></div>
+                </div>
+
+
+            </div>
+
+            <div style="margin-left:3%;margin-right:3%;margin-top:3%;" class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <div id="sexbar" style="width:100%;height:350px;margin: 0 auto;"></div>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                    <div id="sexpie" style="width:100%;height:350px;margin: 0 auto;"></div>
+                </div>
+            </div>
+
+            <div style="margin-left:3%;margin-right:3%;margin-top:3%;" class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <div id="politicsbar" style="width:100%;height:350px;margin: 0 auto;"></div>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                    <div id="politicspie" style="width:100%;height:350px;margin: 0 auto;"></div>
+                </div>
+            </div>
+
+            <div style="margin-left:3%;margin-right:3%;margin-top:3%;" class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <div id="agebar" style="width:100%;height:350px;margin: 0 auto;background-color: #333333;" align="center">
+                    <div style="width:250px;height:40px;margin: 0 auto;" >
+                        <div style="margin: 0 auto">
+                            <form action="/charts" method="post">
+                                <div class="form-inline" style="margin-top: 10px;">
+                                    <span style="color: #FFFFFF;">年龄节点：</span>
+                                    <input type="number" placeholder="年龄" style="width:70px;" oninput="if(value.length>2) value=value.slice(0,2);if(value<0) value=0;"
+                                           maxlength="2" name="ageline" th:value="${ageline}" required class="form-control" />
+                                    <button type="submit" class="btn-outline-success form-control">查看比例</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <span style="font-size: 17px; font-weight:900;color: #FFFFFF;">各年龄段人员数量</span>
+                    <!-- Table goes in the document BODY -->
+                    <table class="hovertable" align="center" width="250px" >
+
+                        <tr align="center" >
+                            <th width="50%">年龄区间</th><th width="25%">人数</th><th width="25%">占比</th>
+                        </tr>
+                        <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';" align="center">
+                            <td>20-29</td><td>[[${age2029}]]</td><td>[[${age2029per}]]</td>
+                        </tr>
+                        <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';" align="center">
+                            <td>30-39</td><td>[[${age3039}]]</td><td>[[${age3039per}]]</td>
+                        </tr>
+                        <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';" align="center">
+                            <td>40-49</td><td>[[${age4049}]]</td><td>[[${age4049per}]]</td>
+                        </tr>
+                        <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';" align="center">
+                            <td>50-59</td><td>[[${age5059}]]</td><td>[[${age5059per}]]</td>
+                        </tr>
+                        <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';" align="center">
+                            <td>60-69</td><td>[[${age6069}]]</td><td>[[${age6069per}]]</td>
+                        </tr>
+                        <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';" align="center">
+                            <td>平均年龄</td><td colspan="2">[[${ageave}]]</td>
+                        </tr>
+                    </table>
+                </div>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                    <div id="agepie" style="width:100%;height:350px;margin: 0 auto;"></div>
+                </div>
+
+            </div>
+
+            <div style="margin-left:3%;margin-right:3%;margin-top:3%;" class="row">
+                <div id="nationbar" style="width:900px;height:450px;margin: 0 auto;" class="col-lg-12"></div>
+            </div>
+
+            <div style="margin-left:3%;margin-right:3%;margin-top:3%;" class="row">
+                <div id="sectorbar" style="width:900px;height:450px;margin: 0 auto;" class="col-lg-12"></div>
+            </div>
+
+            <div style="margin-left:3%;margin-right:3%;margin-top:3%;" class="row">
+                <div id="professionbar" style="width:900px;height:350px;margin: 0 auto;" class="col-lg-12"></div>
+            </div>
+
+            <span style="display: none;" id="sbSectorName" th:text="${sbSectorName}"></span>
+            <span style="display: none;" id="sbSectorValue" th:text="${sbSectorValue}"></span>
+
+            <span style="display: none;" id="sbProfessionName" th:text="${sbProfessionName}"></span>
+            <span style="display: none;" id="sbProfessionValue" th:text="${sbProfessionValue}"></span>
+
+            <span style="display: none;" id="sbNationName" th:text="${sbNationName}"></span>
+            <span style="display: none;" id="sbNationValue" th:text="${sbNationValue}"></span>
+
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © Taxuxiang 2020</span></div>
+                </div>
+            </footer>
+
+        </div>
+        <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+
+    </div>
+    </div>
+    <script th:src="@{/js/navscript.js}"></script>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.js"></script>
+    <script th:src="@{/js/script.min.js}"></script>
+    <script th:src="@{/js/echarts.js}"></script>
+    <script type="text/javascript">
+            window.onload=function () {
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('jobbar'), 'dark');
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: '青联职务数量柱状图',
+                        left:'center'
+                    },
+                    tooltip: {},
+                    xAxis: {
+                        data: ["委员", "常委", "副主席", "主席"]
+                    },
+                    yAxis: {},
+                    series: [{
+                        name: '人数',
+                        type: 'bar',
+                        data: [ [[${Member}]], [[${standingCommitteeMember}]], [[${viceChairman}]], [[${chairman}]] ]
+                    }]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+
+                <!--#########################################################################################-->
+                echarts.init(document.getElementById('jobpie'),'dark').setOption({
+                    title: {
+                        text: '青联职务比例分析饼图',
+                        left:'center'
+                    },
+                    series: {
+                        name:'人数',
+                        type: 'pie',
+                        minAngle: 1,
+                        avoidLabelOverlap: true,
+                        data: [
+                            {name: '委员', value: [[${Member}]]},
+                            {name: '常委', value: [[${standingCommitteeMember}]]},
+                            {name: '副主席', value: [[${viceChairman}]]},
+                            {name: '主席', value: [[${chairman}]]}
+                        ],
+                        itemStyle:{
+                            normal:{
+                                label:{
+                                    show: true,
+                                    formatter: '{b}:{c}个 {d}%'
+                                },
+                                labelLine :{show:true}
+                            }
+                        }
+                    }
+                });
+
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('sexbar'), 'dark');
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: '男女生数量柱状图',
+                        left:'center'
+                    },
+                    tooltip: {},
+                    xAxis: {
+                        data: ["男生", "女生"]
+                    },
+                    yAxis: {},
+                    series: [{
+                        name: '人数',
+                        type: 'bar',
+                        data: [ [[${male}]], [[${female}]]]
+                    }]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+
+                <!--#########################################################################################-->
+                echarts.init(document.getElementById('sexpie'),'dark').setOption({
+                    title: {
+                        text: '男女生比例分析饼图',
+                        left:'center'
+                    },
+                    series: {
+                        name:'人数',
+                        type: 'pie',
+                        minAngle: 1,
+                        avoidLabelOverlap: true,
+                        data: [
+                            {name: '男生', value: [[${male}]]},
+                            {name: '女生', value: [[${female}]]}
+                        ],
+                        itemStyle:{
+                            normal:{
+                                label:{
+                                    show: true,
+                                    formatter: '{b}: {c}个 {d}%'
+                                },
+                                labelLine :{show:true}
+                            }
+                        }
+                    }
+                });
+
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('politicsbar'), 'dark');
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: '政治面貌数量柱状图',
+                        left:'center'
+                    },
+                    tooltip: {},
+                    xAxis: {
+                        data: ["中共党员", "群众", "无党派", "民革", "民进"],
+                        axisLabel: {
+                            show: true,
+                            interval: 0,
+                            formatter: function(val) {
+                                var strs = val.split(''); //字符串数组
+                                var str = ''
+                                for(var i = 0, s; s = strs[i++];) { //遍历字符串数组
+                                    str += s;
+                                    if(!(i % 2)) str += '\n'; //按需要求余
+                                }
+                                return str
+                            }
+                        },
+                    },
+                    yAxis: {},
+                    series: [{
+                        name: '人数',
+                        type: 'bar',
+                        data: [ [[${ccpNumer}]],[[${publicNumber}]],[[${noneNumber}]],[[${mingeNum}]],[[${minjinNum}]] ]
+                    }]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+
+                <!--#########################################################################################-->
+                echarts.init(document.getElementById('politicspie'),'dark').setOption({
+                    title: {
+                        text: '政治面貌比例分析饼图',
+                        left:'center'
+                    },
+                    series: {
+                        name:'人数',
+                        type: 'pie',
+                        minAngle: 1,
+                        avoidLabelOverlap: true,
+                        data: [
+                            {name: '中共党员', value: [[${ccpNumer}]] },
+                            {name: '群众', value: [[${publicNumber}]] },
+                            {name: '无党派', value: [[${noneNumber}]] },
+                            {name: '民革', value: [[${mingeNum}]] },
+                            {name: '民进', value: [[${minjinNum}]] }
+                        ],
+                        itemStyle:{
+                            normal:{
+                                label:{
+                                    show: true,
+                                    formatter: '{b}: {c}个 {d}%'
+                                },
+                                labelLine :{show:true}
+                            }
+                        }
+                    }
+                });
+
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('sectorbar'), 'dark');
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: '各界别人员数量柱状图',
+                        left:'center'
+                    },
+                    tooltip: {
+                        formatter: '{b}: {c}'
+                    },
+                    xAxis: {
+                        data: document.getElementById("sbSectorName").innerText.split(','),
+                        axisLabel: {
+                            show: true,
+                            interval: 0,
+                            formatter: function(val) {
+                                var strs = val.split(''); //字符串数组
+                                var str = ''
+                                for(var i = 0, s; s = strs[i++];) { //遍历字符串数组
+                                    str += s;
+                                    if(!(i % 4)) str += '\n'; //按需要求余
+                                }
+                                return str
+                            }
+                        },
+                    },
+                    yAxis: {
+                        type:'value'
+                    },
+                    series: [{
+                        name: '人数',
+                        type: 'bar',
+                        data: document.getElementById("sbSectorValue").innerText.split(','),
+                        label:{
+                            normal: {
+                                show: true,
+                                position: 'inside',
+                                formatter: function (a){
+                                    var total = [[${barTotalSum}]];
+                                    return (a.value/total*100).toFixed(1)+"%";
+                                }
+                            }
+                        }
+                    }]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+
+
+
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('professionbar'), 'dark');
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: '各职业结构人员数量柱状图',
+                        left:'center'
+                    },
+                    tooltip: {
+                        formatter: '{b}: {c}'
+                    },
+                    xAxis: {
+                        data: document.getElementById("sbProfessionName").innerText.split(','),
+                        axisLabel: {
+                            show: true,
+                            interval: 0,
+                            formatter: function(val) {
+                                var strs = val.split(''); //字符串数组
+                                var str = ''
+                                for(var i = 0, s; s = strs[i++];) { //遍历字符串数组
+                                    str += s;
+                                    if(!(i % 4)) str += '\n'; //按需要求余
+                                }
+                                return str
+                            }
+                        },
+                    },
+                    yAxis: {
+                        type:'value'
+                    },
+                    series: [{
+                        name: '人数',
+                        type: 'bar',
+                        data: document.getElementById("sbProfessionValue").innerText.split(','),
+                        label:{
+                            normal: {
+                                show: true,
+                                position: 'inside',
+                                formatter: function (a){
+                                    var total = [[${barProfessionTotalSum}]];
+                                    return (a.value/total*100).toFixed(1)+"%";
+                                }
+                            }
+                        }
+                    }]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+
+
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('nationbar'), 'dark');
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: '各民族人数数量柱状图',
+                        left:'center'
+                    },
+                    tooltip: {
+                        formatter: '{b}: {c}'
+                    },
+                    xAxis: {
+                        data: document.getElementById("sbNationName").innerText.split(','),
+                        axisLabel: {
+                            show: true,
+                            interval: 0,
+                            formatter: function(val) {
+                                var strs = val.split(''); //字符串数组
+                                var str = ''
+                                for(var i = 0, s; s = strs[i++];) { //遍历字符串数组
+                                    str += s;
+                                    if(!(i % 4)) str += '\n'; //按需要求余
+                                }
+                                return str
+                            }
+                        },
+                    },
+                    yAxis: {
+                        type:'value'
+                    },
+                    series: [{
+                        name: '人数',
+                        type: 'bar',
+                        data: document.getElementById("sbNationValue").innerText.split(','),
+                        label:{
+                            normal: {
+                                show: true,
+                                position: 'inside',
+                                formatter: function (a){
+                                    var total = [[${barNationTotalSum}]];
+                                    return (a.value/total*100).toFixed(1)+"%";
+                                }
+                            }
+                        }
+                    }]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+
+
+
+
+                echarts.init(document.getElementById('agepie'),'dark').setOption({
+                    title: {
+                        text: '年龄比例分析饼图',
+                        left:'center'
+                    },
+                    series: {
+                        name:'人数',
+                        type: 'pie',
+                        minAngle: 1,
+                        avoidLabelOverlap: true,
+                        data: [
+                            {name: '[[${ageline}]]岁以上', value: [[${ageobove}]]},
+                            {name: '[[${ageline}]]岁及以下', value: [[${agefollow}]]}
+                        ],
+                        itemStyle:{
+                            normal:{
+                                label:{
+                                    show: true,
+                                    formatter: '{b}: {c}个 {d}%'
+                                },
+                                labelLine :{show:true}
+                            }
+                        }
+                    }
+                });
+
+            }
+
+        </script>
+
+</body>
+
+</html>

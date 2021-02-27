@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>网址打错啦！</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100i,300,300i,400,700,900">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+    <link rel="stylesheet" th:href="@{/fonts/fontawesome-all.min.css}">
+    <link rel="stylesheet" th:href="@{/fonts/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/fonts/fontawesome5-overrides.min.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.min.css}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/navstyle.css}">
+</head>
+
+<body id="page-top">
+    <header>
+        <div style="margin-left: 50px;"><a href="/index"><i class="logo fas fa-home">&nbsp;人事管理系统</i></a></div>
+        <nav class="site-nav">
+            <ul>
+                <li> <a href="/dataquery">数据查询</a></li>
+                <li><a href="/datainput">数据录入|修改</a></li>
+                <li><a href="/charts">统计图表</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <div class="container-fluid">
+                    <div class="text-center mt-5">
+                        <div class="error mx-auto" data-text="404">
+                            <p class="m-0">404</p>
+                        </div>
+                        <p class="text-dark mb-5 lead">找不到页面</p>
+                        <p class="text-black-50 mb-0">请输入正确的网址</p><a href="/">← 返回主页</a></div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © Taxuxiang 2020</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a></div>
+    <script th:src="@{/js/navscript.js}"></script>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.js"></script>
+    <script th:src="@{/js/script.min.js}"></script>
+    <script>
+        function btnClick() {
+            $('#sidebarToggle').trigger('click');
+        }
+        $(function() {
+            window.onload = btnClick;//页面加载完执行模拟点击事件
+        });
+    </script>
+</body>
+
+</html>

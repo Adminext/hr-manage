@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>数据查询</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100i,300,300i,400,700,900">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+    <link rel="stylesheet" th:href="@{/fonts/fontawesome-all.min.css}">
+    <link rel="stylesheet" th:href="@{/fonts/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/fonts/fontawesome5-overrides.min.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.min.css}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/navstyle.css}">
+</head>
+
+<body id="page-top">
+<header>
+    <div style="margin-left: 50px;"><a href="/index"><i class="logo fas fa-home">&nbsp;人事管理系统</i></a></div>
+    <nav class="site-nav">
+        <ul>
+            <li class="active"><a href="/dataquery">数据查询</a></li>
+            <li><a href="/datainput">数据录入|修改</a></li>
+            <li><a href="/charts">统计图表</a></li>
+        </ul>
+    </nav>
+</header>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div style="margin-left:3%;margin-right:3%;margin-top:3%;">
+                <form action="/dataquery/by" method="post">
+                    <!-- 按条件查询，隐藏翻页的页数、页码的表单域
+                         这两个表单域中，页码可以设置为默认的1，页数取决于上一次的值-->
+                    <div class="form-group pull-left form-inline">
+                        <input type="hidden" name="recordCount" value="15" th:value="${recordCount}"/>
+                        <input type="hidden" name="pageNumber" value="1"/>
+                        <span class="form-inline" style="font-size: 24px;">选取属性查询：</span>
+                        <select name="fieldname" class="form-control" id="selectorFieldName">
+                            <option value="none">不选取任何属性</option>
+                            <option value="name" >姓名</option>
+                            <option value="idnumber">身份证号码</option>
+                        </select>
+                        <input type="text" class="form-control" placeholder="请输入属性值.." style="margin-left: 4px;"
+                               maxlength="4" name="searchvalue" required  th:value="${searchvalue}" />
+                        <button type="submit" class="btn-outline-success form-control" style="margin-left: 4px;">点击查询</button>
+                    </div>
+                </form>
+                <form action="/dataquery/by" method="post" style="float:right;margin-left: 4px;">
+                    <input type="hidden" name="fieldname" value="none" />
+                    <input type="hidden" name="searchvalue" value="无" />
+                    <input type="hidden" name="recordCount" value="15" th:value="${recordCount}" />
+                    <input type="hidden" name="pageNumber" value="1"  />
+
+                    <button type="submit" class="btn-outline-success form-control">查看全部数据</button>
+                </form>
+
+                <form action="/dataquery/export" method="post" style="float:right;">
+                    <input type="hidden" name="fieldname" value="none" th:value="${fieldname}"/>
+                    <input type="hidden" name="searchvalue" value="无" th:value="${searchvalue}"/>
+                    <button type="submit" class="btn-outline-success form-control">导出数据</button>
+                </form>
+            </div>
+
+            <div id="content">
+                <div style="margin-left:3%;margin-right:3%;margin-top:1%;">
+                    <!-- 按翻页查询，隐藏筛选条件的表单域 -->
+                    <form action="/dataquery/by" method="post" class="form-group form-inline" role="form">
+                        <input type="hidden" name="fieldname" value="none" th:value="${fieldname}" />
+                        <input type="hidden" name="searchvalue" value="无" th:value="${searchvalue}" />
+                        <span>总记录数：</span><span th:text="${recordTotalCount}">666</span><span>&nbsp;</span>
+                        <span>每页条数：</span>
+                        <input name="recordCount" class="form-control" value="15" type="number" th:value="${recordCount}" style="width:70px" oninput="if(value<=1) value=1;"/>
+                        <span>&nbsp;</span><span>当前页：</span><span th:text="${pageNumber}">1</span><span>&nbsp;</span>
+                        <span>第几页：</span>
+                        <input name="pageNumber" class="form-control" value="1" type="number" th:value="${pageNumber}" style="width: 70px" oninput="if(value<=1) value=1; "/>
+
+                        <button type="submit" class="btn-outline-success form-control" style="margin-left: 4px;">查看</button>
+                    </form>
+
+
+                    <div style="overflow:scroll;">
+                        <table class="table table-hover" style="min-width:4800px;font-size:14px">
+                            <thead>
+                            <tr>
+                                <div th:each="webName:${allFieldsWebName}">
+                                    <td align='center' th:text="${webName}" style="color: #2d2e33;font-weight:bold;padding: 4px 4px 4px 4px;">表字段名</td>
+                                </div>
+                            </tr>
+                            </thead>
+                            <tbody th:each="arrayList:${arrayLists}">
+                                <tr>
+                                    <div th:each="value:${arrayList}">
+                                        <td align='center' th:text="${value}" style="padding: 4px 4px 4px 4px;">表格字段值</td>
+                                    </div>
+                                </tr>
+                            </tbody>
+                            <p th:if="${wasSearchAndZero}==true" >经系统查询，无相关数据。</p>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © Taxuxiang 2020</span></div>
+                </div>
+            </footer>
+        </div>
+        <a class="border rounded d-inline scroll-to-top" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
+    </div>
+
+    <script th:src="@{/js/navscript.js}"></script>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.js"></script>
+    <script th:src="@{/js/script.min.js}"></script>
+    <script th:src="@{/js/jquery.table2excel.js}"></script>
+    <script>
+        $('button').click(function(){
+            console.log(1)
+            $("#datatable").table2excel({
+                exclude: ".noExl",
+                name: "Excel Document Name",
+                filename: "myFileName",
+                exclude_img: true,
+                exclude_links: true,
+                exclude_inputs: true
+            });
+        })
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        $().ready(function() {
+            var single = [[${fieldname}]];
+            $("#selectorFieldName option[value= " + single + "]").prop("selected",true);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.management.crudsystem.mapper.DataInputMapper">
+
+    <!-- 增加一个员工的原本所有字段的信息 -->
+    <insert id="addEmployee" parameterType="com.management.crudsystem.pojo.Employee">
+        insert into employee (name,sex,nation,politicsstatus,birthday,nativeplace,idnumber,accademiccareer,accademicdegree,
+        stationandposition,profession,title,jobgrade,majorsocialposts,importantawardsandhonors,telephone,sector,
+        youthposition,nominatedunit,ssstimeandjob,sssccpjob,ssscomments)
+        values(#{name}, #{sex}, #{nation}, #{politicsstatus}, #{birthday}, #{nativeplace}, #{idnumber},#{accademiccareer},
+        #{accademicdegree}, #{stationandposition}, #{profession}, #{title}, #{jobgrade}, #{majorsocialposts},
+        #{importantawardsandhonors}, #{telephone}, #{sector}, #{youthposition},
+        #{nominatedunit}, #{ssstimeandjob}, #{sssccpjob}, #{ssscomments} )
+        <selectKey keyProperty="userid" order="AFTER" resultType="int">
+            select  last_insert_id()
+        </selectKey>
+</insert>
+
+    <!-- 增加一个员工的其余字段的信息 -->
+    <insert id="addEmployeeOther" parameterType="int">
+        insert into newfieldvalue values
+        <foreach collection="otherFieldsMap.entrySet()" separator="," index="key" item="val">
+            (default ,#{userid}, #{key}, #{val})
+        </foreach>
+    </insert>
+
+    <!-- 删除一个员工的所有字段的信息 -->
+    <delete id="deleteEmployee" parameterType="int">
+        delete from employee where userid = #{userid}
+    </delete>
+
+    <delete id="deleteNewFieldValue" parameterType="int">
+        delete from newfieldvalue where userid = #{userid}
+    </delete>
+
+    <!-- 更新一个员工的原本所有字段的信息 -->
+    <update id="updateEmployee">
+        update employee set name=#{name}, sex=#{sex}, nation=#{nation}, politicsstatus=#{politicsstatus}, birthday=#{birthday}, nativeplace=#{nativeplace}, idnumber=#{idnumber}, accademiccareer=#{accademiccareer}, accademicdegree=#{accademicdegree}, stationandposition=#{stationandposition}, profession=#{profession}, title=#{title}, jobgrade=#{jobgrade}, majorsocialposts=#{majorsocialposts}, importantawardsandhonors=#{importantawardsandhonors}, telephone=#{telephone}, sector=#{sector}, youthposition=#{youthposition}, nominatedunit=#{nominatedunit}, ssstimeandjob=#{ssstimeandjob}, sssccpjob=#{sssccpjob}, ssscomments=#{ssscomments} where userid=#{userid};
+    </update>
+
+    <!-- 更新一个员工的其余字段的信息 -->
+    <update id="updateEmployeeOther">
+        <foreach collection="otherFieldsMap.entrySet()" separator=";" index="key" item="val">
+            update newfieldvalue set fieldvalue = #{val} where newfieldname = #{key} and userid=#{userid}
+        </foreach>
+    </update>
+
+    <!--查询所有的字段及其web名字-->
+    <select id="queryNewFieldName" resultType="java.util.HashMap">
+        select fieldname,fieldwebname from newfieldwebname
+    </select>
+
+    <!-- 查询原本的字段有有哪些 -->
+    <select id="QueryOriginalField" resultType="java.lang.String">
+        select fieldname from fieldname
+    </select>
+
+    <!--插入新增的属性字段-->
+    <insert id="insertNewField">
+        insert into newfieldwebname values (default ,#{newFieldName}, #{newFieldWebName})
+    </insert>
+
+    <delete id="deleteField">
+        delete from newfieldwebname where fieldname = #{deleteFieldName}
+    </delete>
+
+</mapper>

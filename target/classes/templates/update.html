@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>更新员工信息</title>
+  <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100i,300,300i,400,700,900">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+  <link rel="stylesheet" th:href="@{/fonts/fontawesome-all.min.css}">
+  <link rel="stylesheet" th:href="@{/fonts/font-awesome.min.css}">
+  <link rel="stylesheet" th:href="@{/fonts/fontawesome5-overrides.min.css}">
+  <link rel="stylesheet" th:href="@{/css/styles.min.css}">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" th:href="@{/css/navstyle.css}">
+  <style>
+    .smart-green {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 700px;
+      background: #F8F8F8;
+      padding: 40px 40px 30px 40px;
+      font: 16px Arial, Helvetica, sans-serif;
+      color: #1e2530;
+      border-radius: 5px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+    }
+
+    .smart-green h1 {
+      font: 24px "Trebuchet MS", Arial, Helvetica, sans-serif;
+      padding: 20px 0px 20px 40px;
+      display: block;
+      margin: -30px -30px 10px -30px;
+      color: #FFF;
+      background: #1c606a;
+      text-shadow: 1px 1px 1px #949494;
+      border-radius: 5px 5px 0px 0px;
+      -webkit-border-radius: 5px 5px 0px 0px;
+      -moz-border-radius: 5px 5px 0px 0px;
+      border-bottom: 1px solid #89AF4C;
+    }
+
+    .smart-green h1 > span {
+      display: block;
+      font-size: 11px;
+      color: #FFF;
+    }
+
+    .smart-green label {
+      display: block;
+      margin: 0px 0px 5px;
+    }
+
+    .smart-green label > span {
+      float: left;
+      margin-top: 10px;
+      color: #5E5E5E;
+    }
+
+    .smart-green input[type="text"], .smart-green input, .smart-green textarea, .smart-green select {
+      color: #555;
+      height: 40px;
+      line-height: 25px;
+      width: 100%;
+      padding: 0px 0px 0px 10px;
+      margin-top: 2px;
+      border: 1px solid #E5E5E5;
+      background: #FBFBFB;
+      outline: 0;
+      -webkit-box-shadow: inset 1px 1px 2px rgba(238, 238, 238, 0.2);
+      box-shadow: inset 1px 1px 2px rgba(238, 238, 238, 0.2);
+      font: normal 14px/14px Arial, Helvetica, sans-serif;
+    }
+
+    .smart-green textarea {
+      height: 100px;
+      padding-top: 10px;
+    }
+
+
+    .smart-green .button {
+      background-color: #1c606a;
+      border-radius: 5px;
+      -webkit-border-radius: 5px;
+      -moz-border-border-radius: 5px;
+      border: none;
+      padding: 10px 25px 10px 25px;
+      color: #FFF;
+      text-shadow: 1px 1px 1px #949494;
+    }
+
+    .smart-green .button:hover {
+      background-color: #80A24A;
+    }
+
+    .error-msg{
+      color: red;
+      margin-top: 10px;
+    }
+    .success-msg{
+      color: #80A24A;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+
+</head>
+
+<body id="page-top">
+<header>
+  <div style="margin-left: 50px;"><a href="/index"><i class="logo fas fa-home">&nbsp;人事管理系统</i></a></div>
+  <nav class="site-nav">
+    <ul>
+      <li><a href="/dataquery">数据查询</a></li>
+      <li class="active"><a href="/datainput">数据录入|修改</a></li>
+      <li><a href="/charts">统计图表</a></li>
+    </ul>
+  </nav>
+</header>
+<div id="wrapper">
+  <div class="d-flex flex-column" id="content-wrapper">
+      <div style="margin-left:3%;margin-right:3%;margin-top:5%;">
+
+        <form action="/datainput/updateData" method="post" class="smart-green">
+          <h1>更新员工数据</h1>
+          <label>
+            <input type="text" name="userid" class="error" th:value="${userid}" style="display: none;" required>
+          </label>
+          <label>
+            <span style="color: red">*</span>
+            <span>姓名</span>
+            <input type="text" name="name" class="error" placeholder="请输入姓名" th:value="${name}" required>
+          </label>
+          <label>
+            <span style="color: red">*</span>
+            <span>性别</span>
+            <select name="sex" class="div-select-target" width="200" id="selectorSex">
+              <option value="男">男</option>
+              <option value="女">女</option>
+            </select>
+          </label>
+          <label>
+            <span style="color: red">*</span>
+            <span>民族</span>
+            <select name="nation" id="selectorNation">
+              <option value="汉" selected="selected">汉族</option>
+              <option value="蒙古">蒙古族</option>
+              <option value="回">回族</option>
+              <option value="藏">藏族</option>
+              <option value="维吾尔">维吾尔族</option>
+              <option value="苗">苗族</option>
+              <option value="彝">彝族</option>
+              <option value="壮">壮族</option>
+              <option value="布依">布依族</option>
+              <option value="朝鲜">朝鲜族</option>
+              <option value="满">满族</option>
+              <option value="侗">侗族</option>
+              <option value="瑶">瑶族</option>
+              <option value="白">白族</option>
+              <option value="土">土家族</option>
+              <option value="哈尼">哈尼族</option>
+              <option value="哈萨克">哈萨克族</option>
+              <option value="傣">傣族</option>
+              <option value="黎">黎族</option>
+              <option value="傈僳">傈僳族</option>
+              <option value="佤">佤族</option>
+              <option value="畲">畲族</option>
+              <option value="高山">高山族</option>
+              <option value="拉祜">拉祜族</option>
+              <option value="水">水族</option>
+              <option value="东乡">东乡族</option>
+              <option value="纳西">纳西族</option>
+              <option value="景颇">景颇族</option>
+              <option value="柯尔克孜">柯尔克孜族</option>
+              <option value="土">土族</option>
+              <option value="达斡尔">达斡尔族</option>
+              <option value="仫佬">仫佬族</option>
+              <option value="羌">羌族</option>
+              <option value="布朗">布朗族</option>
+              <option value="撒拉">撒拉族</option>
+              <option value="毛南">毛南族</option>
+              <option value="仡佬">仡佬族</option>
+              <option value="锡伯">锡伯族</option>
+              <option value="阿昌">阿昌族</option>
+              <option value="普米">普米族</option>
+              <option value="塔吉克">塔吉克族</option>
+              <option value="怒">怒族</option>
+              <option value="乌孜别克">乌孜别克族</option>
+              <option value="俄罗斯">俄罗斯族</option>
+              <option value="鄂温克">鄂温克族</option>
+              <option value="德昂">德昂族</option>
+              <option value="保安">保安族</option>
+              <option value="裕固">裕固族</option>
+              <option value="京">京族</option>
+              <option value="塔塔尔">塔塔尔族</option>
+              <option value="独龙">独龙族</option>
+              <option value="鄂伦春">鄂伦春族</option>
+              <option value="赫哲">赫哲族</option>
+              <option value="门巴">门巴族</option>
+              <option value="珞巴">珞巴族</option>
+              <option value="基诺">基诺族</option>
+            </select>
+          </label>
+          <label>
+            <span style="color: red">*</span>
+            <span>政治面貌(如：中共党员；群众)</span>
+            <input type="text" name="politicsstatus" class="error" placeholder="请输入政治面貌" th:value="${politicsstatus}"
+                   required onkeyup="value=value.replace(/[^\u4e00-\u9fa5]/g,'')"
+                   onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\u4e00-\u9fa5]/g,''))">
+          </label>
+          <label>
+            <span>出生年月</span>
+            <input type="date" name="birthday" class="error" placeholder="请输入出生年月" value="2020-01-01" th:value="${birthday}">
+          </label>
+          <label>
+            <span>籍贯</span>
+            <select name="nativeplace1" id="selectorNativeplace1">
+              <option value="北京" selected="selected">北京</option>
+              <option value="天津">天津</option>
+              <option value="上海">上海</option>
+              <option value="重庆">重庆</option>
+              <option value="河北">河北</option>
+              <option value="山西">山西</option>
+              <option value="辽宁">辽宁</option>
+              <option value="吉林">吉林</option>
+              <option value="黑龙江">黑龙江</option>
+              <option value="江苏">江苏</option>
+              <option value="浙江">浙江</option>
+              <option value="安徽">安徽</option>
+              <option value="福建">福建</option>
+              <option value="江西">江西</option>
+              <option value="山东">山东</option>
+              <option value="河南">河南</option>
+              <option value="湖北">湖北</option>
+              <option value="湖南">湖南</option>
+              <option value="广东">广东</option>
+              <option value="海南">海南</option>
+              <option value="四川">四川</option>
+              <option value="贵州">贵州</option>
+              <option value="云南">云南</option>
+              <option value="陕西">陕西</option>
+              <option value="甘肃">甘肃</option>
+              <option value="青海">青海</option>
+              <option value="台湾">台湾</option>
+              <option value="内蒙古">内蒙古</option>
+              <option value="广西">广西</option>
+              <option value="西藏">西藏</option>
+              <option value="宁夏">宁夏</option>
+              <option value="新疆">新疆</option>
+              <option value="香港">香港</option>
+              <option value="澳门">澳门</option>
+            </select>
+            <input type="text" name="nativeplace2" class="error" th:value="${nativeplace2}" placeholder="请输入籍贯中非省级部分">
+          </label>
+          <label>
+            <span style="color: red">*</span>
+            <span>身份证号码</span>
+            <input type="text" name="idnumber" class="error" placeholder="请输入身份证号码" th:value="${idnumber}"
+                   onblur="checkIDNumber(value)?true:(value='')" required>
+          </label>
+          <label>
+            <span>学历</span>
+            <select name="accademiccareer" id="selectorAccademiccareer">
+              <option value="研究生" selected="selected">研究生</option>
+              <option value="大学本科">大学本科</option>
+              <option value="专科">专科</option>
+              <option value="高中">高中</option>
+            </select>
+          </label>
+          <label>
+            <span>学位</span>
+            <select name="accademicdegree" id="selectorAccademicdegree">
+              <option value="博士" >博士</option>
+              <option value="硕士" selected="selected">硕士</option>
+              <option value="学士">学士</option>
+              <option value="无">无</option>
+            </select>
+          </label>
+          <label>
+            <span>工作单位及职务</span>
+            <input type="text" name="stationandposition" class="error" placeholder="请输入工作单位及职务" th:value="${stationandposition}">
+          </label>
+          <label>
+            <span>职业</span>
+            <input type="text" name="profession" class="error" placeholder="请输入职业" th:value="${profession}">
+          </label>
+          <label>
+            <span>职称</span>
+            <input type="text" name="title" class="error" placeholder="请输入职称" th:value="${title}" >
+          </label>
+          <label>
+            <span>职级</span>
+            <input type="text" name="jobgrade" class="error" placeholder="请输入职级" th:value="${jobgrade}" >
+          </label>
+          <label>
+            <span>主要社会职务</span>
+            <input type="text" name="majorsocialposts" class="error" placeholder="请输入主要社会职务" th:value="${majorsocialposts}">
+          </label>
+          <label>
+            <span>重要奖项及荣誉</span>
+            <input type="text" name="importantawardsandhonors" class="error" placeholder="请输入重要奖项及荣誉" th:value="${importantawardsandhonors}" >
+          </label>
+          <label>
+            <span>联系方式</span>
+            <input type="number" name="telephone" class="error" placeholder="请输入联系方式" th:value="${telephone}"
+                   onblur="checkMobile(value)?true:(value='')">
+          </label>
+          <label>
+            <span>界别</span>
+            <input type="text" name="sector" class="error" placeholder="请输入界别" th:value="${sector}">
+          </label>
+          <label>
+            <span>青联职务</span>
+            <input type="text" name="youthposition" class="error" placeholder="请输入青联职务" th:value="${youthposition}">
+          </label>
+          <label>
+            <span>提名单位</span>
+            <input type="text" name="nominatedunit" class="error" placeholder="请输入提名单位" th:value="${nominatedunit}" >
+          </label>
+          <label>
+            <span>在会员团体任职时间及职务</span>
+            <input type="text" name="ssstimeandjob" class="error" placeholder="请输入在会员团体任职时间及职务" th:value="${ssstimeandjob}">
+          </label>
+          <label>
+            <span>担任党代表、人大代表、政协委员情况</span>
+            <input type="text" name="sssccpjob" class="error" placeholder="请输入担任党代表、人大代表、政协委员情况" th:value="${sssccpjob}">
+          </label>
+          <label>
+            <span>备注</span>
+            <input type="text" name="ssscomments" class="error" placeholder="请输入备注" th:value="${ssscomments}">
+          </label>
+
+          <label th:each="kv:${kvList}">
+            <span th:text="${kv.webName}">:</span>
+            <input type="text" th:name="${kv.fieldName}" class="error"
+                   th:placeholder="请输入+${kv.webName}" th:value="${kv.fieldValue}"/>
+          </label>
+          <label>
+            <input type="submit" class="button" value="提交"/>
+          </label>
+        </form>
+      </div>
+
+      <footer class="bg-white sticky-footer">
+        <div class="container my-auto">
+          <div class="text-center my-auto copyright"><span>Copyright © Taxuxiang 2020</span></div>
+        </div>
+      </footer>
+</div>
+    <a class="border rounded d-inline scroll-to-top" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
+
+  </div>
+  <script th:src="@{/js/navscript.js}"></script>
+  <script th:src="@{/js/jquery.min.js}"></script>
+  <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.js"></script>
+  <script th:src="@{/js/script.min.js}"></script>
+  <script>
+    $().ready(function() {
+      var single = "[[${sex}]]";
+      $("#selectorSex option[value= " + single + "]").prop("selected",true);
+
+      single = "[[${nation}]]";
+      $("#selectorNation option[value= " + single + "]").prop("selected",true);
+
+      single = "[[${accademiccareer}]]";
+      $("#selectorAccademiccareer option[value= " + single + "]").prop("selected",true);
+
+      single = "[[${accademicdegree}]]";
+      $("#selectorAccademicdegree option[value= " + single + "]").prop("selected",true);
+
+      single = "[[${nativeplace1}]]";
+      $("#selectorNativeplace1 option[value= " + single + "]").prop("selected",true);
+
+
+      // single = [[${fieldname}]];
+      // $("#selectorFieldName option[value= " + single + "]").prop("selected",true);
+    });
+
+
+    function checkIDNumber(NO){
+      var str=NO;
+      //在JavaScript中，正则表达式只能使用"/"开头和结束，不能使用双引号
+      var Expression=/^\d{17}[\d|X|x]$|^\d{15}$/;
+      var objExp=new RegExp(Expression);
+      if(objExp.test(str)==true){
+        return true;
+      }else{
+        alert("身份证号码格式不正确，请重新输入！")
+        return false;
+      }
+    }
+
+    function checkMobile(str) {
+      var re = /^1\d{10}$/ //以1开始后面加10位数字
+      if (re.test(str)) {
+        return true;
+      } else {
+        alert("手机号格式错误！");
+        return false;
+      }
+    }
+  </script>
+</body>
+
+</html>

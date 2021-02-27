@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>数据录入|修改</title>
+  <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100i,300,300i,400,700,900">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+  <link rel="stylesheet" th:href="@{/fonts/fontawesome-all.min.css}">
+  <link rel="stylesheet" th:href="@{/fonts/font-awesome.min.css}">
+  <link rel="stylesheet" th:href="@{/fonts/fontawesome5-overrides.min.css}">
+  <link rel="stylesheet" th:href="@{/css/styles.min.css}">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" th:href="@{/css/navstyle.css}">
+
+
+  </head>
+
+<body id="page-top">
+<header>
+  <div style="margin-left: 50px;"><a href="/index"><i class="logo fas fa-home">&nbsp;人事管理系统</i></a></div>
+  <nav class="site-nav">
+    <ul>
+      <li><a href="/dataquery">数据查询</a></li>
+      <li class="active"><a href="/datainput">数据录入|修改</a></li>
+      <li><a href="/charts">统计图表</a></li>
+    </ul>
+  </nav>
+</header>
+<div id="wrapper">
+  <div class="d-flex flex-column" id="content-wrapper">
+
+    <div id="content">
+      <div style="margin-left:3%;margin-top:3%;">
+        <div style="margin-right:3%;">
+          <form action="/datainput/add" method="get" style="float:right;margin-left: 4px;">
+            <button class="btn-outline-success form-control">增加员工</button>
+          </form>
+
+          <form action="/datainput/addfield" method="get" style="float:right">
+            <button class="btn-outline-success form-control">增/减表格字段</button>
+          </form>
+
+        </div>
+
+
+        <div class="form-inline">
+          <form action="/datainput" method="post">
+            <span>请输入员工姓名：</span>
+            <input type="text"  placeholder="王" class="form-control"
+                   maxlength="8" name="username" style="width:200px;" th:value="${username}" required />
+            <button type="submit" class="btn-outline-success form-control">查找</button>
+          </form>
+
+          <!--
+            <p><input type="file" id="excelFile" name="excelFile" accept=".csv,
+              application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" /></p>
+            <input type="button" id="excelButton" value="上传" />
+            <p><img id="imgExcel" alt="上传成功啦" src="" /></p>
+          -->
+          <label for='myExcel' class='inputlabelBox'>
+            <div id="selectFile"class="btn-outline-success form-control" style="margin-left: 8px;margin-right: 8px;width: 230px;">选择文件</div>
+          </label>
+          <input type="file" name="myExcel" id="myExcel" style="display: none;"/>
+
+          <input type="button" class="btn-outline-success form-control"
+                 onclick="sendToUser()" id="sendToUser" value="批量导入Excel" />
+
+        </div>
+      </div>
+      <div style="margin-left:3%;margin-right:3%;margin-top:3%;">
+        <div style="overflow:scroll;">
+          <table class="table table-hover" style="min-width:4800px;font-size:14px">
+            <thead>
+            <tr>
+              <div >
+                <td style="color: #2d2e33;font-weight:bold;padding: 4px 4px 4px 4px;">操作</td>
+              </div>
+
+              <div th:each="webName:${allFieldsWebName}">
+                <td align='center' th:text="${webName}" style="color: #2d2e33;font-weight:bold;padding: 4px 4px 4px 4px;">表字段名</td>
+              </div>
+            </tr>
+            </thead>
+
+            <tbody th:each="arrayList:${arrayLists}">
+            <tr>
+              <td style="padding: 0px 0px;">
+                <form action="/datainput/update" method="post" style="float:left;margin-top: 0;margin-bottom: 0;">
+                  <input name="userid"  style="display:none" th:value="${arrayList[0]}">
+                  <button type="submit" class="btn btm-sm btn-warning" style="font-size:14px;padding:5px 10px;margin:1px 1px;color:black;">改</button>
+                </form>
+                <form action="/datainput/deleteData" method="post" style="float:left;margin-left: 4px;margin-top: 0;margin-bottom: 0;" onsubmit="return sumbit_sure()">
+                  <input name="userid" style="display:none" th:value="${arrayList[0]}">
+                  <button type="submit" class="btn btm-sm btn-danger" style="font-size:14px;padding:5px 10px;margin:1px 1px;color:black;">删</button>
+                </form>
+
+              </td>
+              <div th:each="value:${arrayList}">
+                <td align='center' th:text="${value}" style="padding: 8px 2px 3px 2px;">表格字段值</td>
+              </div>
+            </tr>
+            </tbody>
+            <p th:if="${wasSearchAndZero}==true" >经系统查询，无相关数据。</p>
+
+          </table>
+        </div>
+      </div>
+    </div>
+
+      <footer class="bg-white sticky-footer">
+        <div class="container my-auto">
+          <div class="text-center my-auto copyright"><span>Copyright © Taxuxiang 2020</span></div>
+        </div>
+      </footer>
+    </div>
+    <a class="border rounded d-inline scroll-to-top" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
+  </div>
+
+  <script th:src="@{/js/navscript.js}"></script>
+  <script th:src="@{/js/jquery.min.js}"></script>
+  <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.js"></script>
+  <script th:src="@{/js/script.min.js}"></script>
+  <script th:src="@{/js/ajaxfileupload.js}"></script>
+  <script language="javascript">
+    var myExcel = document.querySelector('#myExcel');
+    myExcel.onchange = function () {
+      var $file1 = $("input[name='myExcel']").val();//用户文件内容(文件)
+      document.getElementById("selectFile").innerText = $file1.substring($file1.lastIndexOf("\\") + 1).toLowerCase();
+    }
+
+    function sumbit_sure(){
+      var gnl=confirm("确定要删除该员工信息?");
+      if (gnl==true){
+        return true;
+      }else{
+        return false;
+      }
+    }
+
+    function sendToUser(){ //在这里进行ajax 文件上传 用户的信息
+      var $file1 = $("input[name='myExcel']").val();//用户文件内容(文件)
+      // 判断文件是否为空
+      if ($file1 == "") {
+        alert("请选择上传的目标文件! ")
+        return false;
+      }
+      //判断文件类型,我这里根据业务需求判断的是Excel文件
+      var fileName1 = $file1.substring($file1.lastIndexOf(".") + 1).toLowerCase();
+      if(fileName1 != "xls" && fileName1 !="xlsx"){
+        alert("请选择Execl文件!");
+        return false;
+      }
+      //判断文件大小
+      var size1 = $("input[name='myExcel']")[0].files[0].size;
+      if (size1>104857600) {
+        alert("上传文件不能大于100M!");
+        return false;
+      }
+
+      boo1 = true;
+      var type = "file";
+      var formData = new FormData();//这里需要实例化一个FormData来进行文件上传
+      formData.append(type,$("#myExcel")[0].files[0]);
+      $.ajax({
+        type : "post",
+        url : "uploadToFile",
+        data : formData,
+        processData : false,
+        contentType : false,
+        success : function(data){
+          if (data==="error") {
+            alert("文件提交失败!");
+            return ;
+          }else if(data==="-1"){
+            alert("文件上传成功!但是导入表格的字段值多于实际数据库中的字段值数量，导入失败。");
+            return ;
+          }else if(data==="-2"){
+            alert("文件上传成功!但是导入表格的字段值少于实际数据库中的字段值数量，导入失败。");
+            return ;
+          }else if(data==="-3"){
+            alert("文件上传成功!但是导入表格的字段值和实际数据库中的字段值不匹配，导入失败。");
+            return ;
+          }else if(data==="-4"){
+            alert("文件上传成功!但是导入表格的行数<=1行，没有数据可以导入，导入失败。");
+            return;
+          }
+
+          alert("文件上传成功!总共导入"+data.toString()+"行数据。");
+          location.reload();
+        },
+        error : function(data){
+          alert("上传失败，请稍后重试！")
+        }
+      });
+    }
+
+
+
+  </script>
+</body>
+
+</html>
