@@ -230,8 +230,8 @@ public class ChartsController {
             sbSectorValue.append(sectorCount+",");
         }
 
-        sbSectorName.setCharAt(sbSectorName.length()-1,' ');
-        sbSectorValue.setCharAt(sbSectorValue.length()-1,' ');
+        sbSectorName.setCharAt(sbSectorName.length() - 1 < 0 ? 0 : sbSectorName.length() - 1,' ');
+        sbSectorValue.setCharAt(sbSectorValue.length() - 1 < 0 ? 0 : sbSectorValue.length() - 1,' ');
 
         System.out.println("sbSectorName:"+sbSectorName);
         System.out.println("sbSectorValue:"+sbSectorValue);
