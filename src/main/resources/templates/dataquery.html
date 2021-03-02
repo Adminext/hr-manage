@@ -74,7 +74,7 @@
                         <input type="hidden" name="searchvalue" value="无" th:value="${searchvalue}" />
                         <span>总记录数：</span><span th:text="${recordTotalCount}">666</span><span>&nbsp;</span>
                         <span>每页条数：</span>
-                        <input name="recordCount" class="form-control" value="15" type="number" th:value="${recordCount}" style="width:70px" oninput="if(value<=1) value=1;"/>
+                        <input name="recordCount" class="form-control" value="30" type="number" th:value="${recordCount}" style="width:70px" oninput="if(value<=1) value=1;"/>
                         <span>&nbsp;</span><span>当前页：</span><span th:text="${pageNumber}">1</span><span>&nbsp;</span>
                         <span>第几页：</span>
                         <input name="pageNumber" class="form-control" value="1" type="number" th:value="${pageNumber}" style="width: 70px" oninput="if(value<=1) value=1; "/>
