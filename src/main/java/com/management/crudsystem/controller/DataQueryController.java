@@ -373,6 +373,7 @@ public class DataQueryController {
 
         //或者Excel文档的第一个表单的第一行
         Row first = sht0.getRow(0);
+        for(int i = 0;i < first.getPhysicalNumberOfCells(); i++) System.out.println(first.getCell(i).getStringCellValue());
         //判断导入的表格的第一行是否和所有的字段的顺序、数量一致，不一致就报错！
         ArrayList<String> allFieldsWebName = getAllFieldsWebName();
         Iterator<String> iterator = allFieldsWebName.iterator();
@@ -410,28 +411,28 @@ public class DataQueryController {
                 continue;
             }
             Employee emp = new Employee(-1,
-                    "".equals(r.getCell(1).toString())?"无":r.getCell(1).toString(),
-                    "".equals(r.getCell(2).toString())?"无":r.getCell(2).toString(),
-                    "".equals(r.getCell(3).toString())?"无":r.getCell(3).toString(),
-                    "".equals(r.getCell(4).toString())?"无":r.getCell(4).toString(),
-                    "".equals(r.getCell(5).toString())?"无":r.getCell(5).toString(),
-                    "".equals(r.getCell(6).toString())?"无":r.getCell(6).toString(),
-                    "".equals(r.getCell(7).toString())?"无":r.getCell(7).toString(),
-                    "".equals(r.getCell(8).toString())?"无":r.getCell(8).toString(),
-                    "".equals(r.getCell(9).toString())?"无":r.getCell(9).toString(),
-                    "".equals(r.getCell(10).toString())?"无":r.getCell(10).toString(),
-                    "".equals(r.getCell(11).toString())?"无":r.getCell(11).toString(),
-                    "".equals(r.getCell(12).toString())?"无":r.getCell(12).toString(),
-                    "".equals(r.getCell(13).toString())?"无":r.getCell(13).toString(),
-                    "".equals(r.getCell(14).toString())?"无":r.getCell(14).toString(),
-                    "".equals(r.getCell(15).toString())?"无":r.getCell(15).toString(),
-                    "".equals(r.getCell(16).toString())?"无":r.getCell(16).toString(),
-                    "".equals(r.getCell(17).toString())?"无":r.getCell(17).toString(),
-                    "".equals(r.getCell(18).toString())?"无":r.getCell(18).toString(),
-                    "".equals(r.getCell(19).toString())?"无":r.getCell(19).toString(),
-                    "".equals(r.getCell(20).toString())?"无":r.getCell(20).toString(),
-                    "".equals(r.getCell(21).toString())?"无":r.getCell(21).toString(),
-                    "".equals(r.getCell(22).toString())?"无":r.getCell(22).toString()
+                    (r.getCell(1) == null)?"无":r.getCell(1).toString(),
+                    (r.getCell(2) == null)?"无":r.getCell(2).toString(),
+                    (r.getCell(3) == null)?"无":r.getCell(3).toString(),
+                    (r.getCell(4) == null)?"无":r.getCell(4).toString(),
+                    (r.getCell(5) == null)?"无":r.getCell(5).toString(),
+                    (r.getCell(6) == null)?"无":r.getCell(6).toString(),
+                    (r.getCell(7) == null)?"无":r.getCell(7).toString(),
+                    (r.getCell(8) == null)?"无":r.getCell(8).toString(),
+                    (r.getCell(9) == null)?"无":r.getCell(9).toString(),
+                    (r.getCell(10) == null)?"无":r.getCell(10).toString(),
+                    (r.getCell(11) == null)?"无":r.getCell(11).toString(),
+                    (r.getCell(12) == null)?"无":r.getCell(12).toString(),
+                    (r.getCell(13) == null)?"无":r.getCell(13).toString(),
+                    (r.getCell(14) == null)?"无":r.getCell(14).toString(),
+                    (r.getCell(15) == null)?"无":r.getCell(15).toString(),
+                    (r.getCell(16) == null)?"无":r.getCell(16).toString(),
+                    (r.getCell(17) == null)?"无":r.getCell(17).toString(),
+                    (r.getCell(18) == null)?"无":r.getCell(18).toString(),
+                    (r.getCell(19) == null)?"无":r.getCell(19).toString(),
+                    (r.getCell(20) == null)?"无":r.getCell(20).toString(),
+                    (r.getCell(21) == null)?"无":r.getCell(21).toString(),
+                    (r.getCell(22) == null)?"无":r.getCell(22).toString()
                     );
             dataInputMapper.addEmployee(emp);
             System.out.println("插入原本字段成功！");
@@ -469,6 +470,9 @@ public class DataQueryController {
 
         //每个map中只有两个k v对，key分别是 fieldname和 webname
         ArrayList<HashMap<String, Object>> hashMaps = dataQueryMapper.queryAllFieldName();
+        for(int i = 0;i < hashMaps.size();i++) {
+            System.out.println(hashMaps.get(i).values());
+        }
 
         //用来存储fieldname和 webname的ArrayList
         ArrayList<String> fieldNameList = new ArrayList<>();
@@ -764,8 +768,9 @@ public class DataQueryController {
             String fieldname = next.get("fieldname").toString();
             otherFieldsMap.put(fieldname,request.getParameter(fieldname));
         }
-        dataInputMapper.addEmployeeOther(userid,otherFieldsMap);
-
+        if(!otherFieldsMap.isEmpty()) {
+            dataInputMapper.addEmployeeOther(userid,otherFieldsMap);
+        }
     }
 
     void beanUpdateNewField(HttpServletRequest request,int userid){
